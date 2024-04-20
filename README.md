@@ -9,7 +9,6 @@ Installation steps:
 2. In the pycharm software terminal, type: pip3 install pymysql.
 3. If the system has mysql, create database djangoproject, the command is create database djangoproject charset=utf8; Otherwise, install mysql first.
 4. After creating the djangoproject library, enter the following command in the pycharm terminal: python3 manage.py makemigrations, the role of the models file (source code has been written) to generate a migration file, and then in the pycharm terminal enter the implementation of the following command: python3 manage.py migrate, this command will migrate the contents of the file into the database, generate tables or modify the field attributes.
-5. Check the djangoproject database tables, if it contains web_smartcontract, web_timecontract, web_txcontract, web_uncheckcontract, web_users then it is successful.
-6. After the above installation is successful, run the manage.py file and wait for pycharm to finish starting, then you can open http://127.0.0.1:8080 in your browser to enter the web interface of the programme, and you can use the administrator account to log in.
+5. After the above installation is successful, run the manage.py file and wait for pycharm to finish starting, then you can open http://127.0.0.1:8080 in your browser to enter the web interface of the programme, and you can use the administrator account to log in.
 
 
