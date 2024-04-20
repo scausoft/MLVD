@@ -1,0 +1,574 @@
+{% extends 'base.html' %}
+{% load static %}
+<!--重写title-->
+{% block title %} Ethereum Smart Contract Vulnerability Detection System {% endblock %}
+<!--区域1保持父模板默认状态-->
+<!--对父模板的区域2进行重写-->
+{% block content %}
+
+<div class="container" style="width: 98%;">
+
+<!--<div class="container">-->
+ <form id="toolbar" class="form-inline" role="form">
+   {% csrf_token %}
+
+          <button id="btn_add" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true">漏洞检测</span>
+    </button>
+       <div class="form-group">
+                    <input type="text" id="byteCodes" name="byteCodes" class="form-control"  placeholder="bytecode">
+                </div>
+<!--           <div class="form-group">-->
+<!--               <input type="text" id="contractType" name="contractType" class="form-control"  placeholder="漏洞类型">-->
+<!--           </div>-->
+       <button type="button" id="searchContract" class="btn btn-primary">搜索</button>
+<!--     <input class="btn btn-default" type="button" id="isHide" value="展示 折叠/全部检测数据">-->
+     <hr>
+     <div class="row" style="width: 100%; margin: 0">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="margin-top: 20px">当前检测数据</h1>
+        </div>
+    </div>
+<!--     <input class="btn btn-default" type="button" id="isHistory" value="展示 当前/历史数据">-->
+ </form>
+
+    {#    //点新增按钮，弹出模态框#}
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content" style="border-color: rgb(222, 225, 230); background-color: rgb(252, 252, 252)">
+            <div class="modal-header" >
+                <p class="text-center"><h4 class="modal-title" id="myModalLabel" >智能合约漏洞检测</h4></p>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body" style="">
+                <form action="" class="form-horizontal" id="model-form">
+                      {% csrf_token %}
+                         <div class="form-group">
+                            <div class="col-sm-9">
+                                <input type="hidden" name="id" class="form-control" >
+                            </div>
+                         </div>
+<!--                      <div class="form-group">-->
+<!--                            <label for="" class="col-sm-2 control-label">合约名(不能为空)</label>-->
+<!--                            <div class="col-sm-9">-->
+<!--                                <input type="text" name="contractName" class="form-control" >-->
+<!--                            </div>-->
+<!--                        </div>-->
+                         <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">字节码</label>
+                            <div class="col-sm-9">
+                                <textarea type="text" name="byteCodes" class="form-control"></textarea>
+<!--                                <input type="text" name="byteCodes" class="form-control" style="height: 60px;" >-->
+                            </div>
+                        </div>
+                    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="sava-btn">检测</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{#    //点编辑按钮，弹出模态框#}
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal" style="background-color:#C0C0C0">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                       <p class="text-center"><h4 class="modal-title" id="myModalLabel" >查看漏洞信息</h4></p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" class="form-horizontal" id="model-form">
+                          {% csrf_token %}
+                         <div class="form-group">
+                            <div class="col-sm-9">
+                                <input type="hidden" name="id" class="form-control" id="modal_id" >
+                            </div>
+                         </div>
+<!--                        <div class="form-group">-->
+<!--                            <label for="" class="col-sm-2 control-label">合约名</label>-->
+<!--                            <div class="col-sm-9">-->
+<!--                                <input type="text" name="contractName" class="form-control" id="modal_contractName">-->
+<!--                            </div>-->
+<!--                        </div>-->
+                         <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">字节码</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="byteCodes" class="form-control" id="modal_byteCodes">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">LightGBM模型预测</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="lType" class="form-control" id="modal_lType" :formatter="statusFormatter">
+                            </div>
+                        </div>
+                          <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">RF模型预测</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="rType" class="form-control" id="modal_rType" :formatter="statusFormatter">
+                            </div>
+                        </div>
+                          <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">XGBoost模型预测类别</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="xType" class="form-control" id="modal_xType" :formatter="statusFormatter">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">AdaBoost模型预测类别</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="aType" class="form-control" id="modal_aType" :formatter="statusFormatter">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">SVM模型预测类别</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="sType" class="form-control" id="modal_sType" :formatter="statusFormatter">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">检测时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="create_time" class="form-control" id="modal_createTime">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+           <!--   <button type="button" class="btn btn-info" id="sava-edit-btn">保存</button> -->
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{#    //点删除按钮，弹出模态框#}
+     <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="delModalLabel">操作提示:</h4>
+                </div>
+                <div class="modal-body">
+                        <form action="" class="form-horizontal">
+                          {% csrf_token %}
+                            <input type="hidden" id="del_ids" name="ids" value="">
+                            <h5 id="delBody">确定要删除选中的数据？</h5>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="deleteIds">确定删除</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+
+    <table id="table1" class="table table-striped"></table>
+    <div class="row" style="width: 100%; margin: 0">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="margin-top: 20px">所有检测数据</h1>
+        </div>
+    </div>
+    <table id="table" class="table table-striped"></table>
+
+    <div  class = "modal fade"  id = "loadingModal" >
+         <div  style = "width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 56%;margin-left:-100px;margin-top:-10px" >
+             <div  class = "progress progress-striped active"  style = "margin-bottom: 0;" >
+                 <div  class = "progress-bar"  style = "width: 100%;" ></div >
+             </div >
+             <h5 >正在检测...</h5 >
+         </div >
+</div >
+
+</div>
+
+{% endblock content %}
+{% block footer %}
+    <script>
+
+    $( '#loadingModal' ).modal({backdrop:  'static' , keyboard:  false });
+    //隐藏
+    $( "#loadingModal" ).modal( 'hide' );
+
+        var isHisory=false;
+    var url = '/Smote/info';
+    var columns = [
+       {
+            checkbox: true,
+            visible: true                  //是否显示复选框
+        },
+<!--        {-->
+<!--            field: 'contractName',-->
+<!--            title: '合约名'-->
+<!--        }, -->
+        // {
+        //     field: 'byteCodes',
+        //     title: '字节码'
+        // },
+         {
+            field: 'id',
+            title: 'id'
+        },
+        {
+            field: 'byteCodes',
+            title: '字节码',
+            cellStyle: formatTableUnit,
+            formatter: paramsMatter
+        },
+        // {
+        //     field: 'byteCodes',
+        //     title: '字节码',
+        //
+        //         cellStyle: function (value, row, index) {
+        //             return {
+        //                 css: {
+        //                     "min-width": "100px",
+        //                     "white-space": "nowrap",
+        //                     "text-overflow": "ellipsis",
+        //                     "overflow": "hidden",
+        //                     "max-width": "200px"
+        //                 }
+        //             }
+        //         },
+        //         formatter: function (value, row, index) {
+        //             return "" + value + "";
+        //         }
+        // },
+        {
+            field: 'lType',
+            title: 'LightGBM预测类别',
+            formatter: typeFormatter
+        },
+        {
+            field: 'rType',
+            title: 'RF预测类别',
+            // width: 130,
+            formatter: typeFormatter
+        },
+        {
+            field: 'xType',
+            title: 'XGBoost预测类别',
+            formatter: typeFormatter
+        },
+        {
+            field: 'aType',
+            title: 'AdaBoost预测类别',
+            formatter: typeFormatter
+        },
+        {
+            field: 'sType',
+            title: 'SVM预测类别',
+            formatter: typeFormatter
+        },
+        {
+            field: 'create_time',
+            title: 'create_time',
+            // width: 150,
+        },
+        {
+             field:'operate',
+             title: '操作',
+             // width: 100,
+             align: 'center',
+             valign: 'middle',
+             formatter: actionFormatter
+         }
+    ];
+
+        $("#table").bootstrapTable({
+        toolbar: '#toolbar',                //自定义工具按钮
+        url: url,                           //请求后台的URL（*）
+        method: 'get',                      //请求方式（*）
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                   //是否显示分页（*）
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 15, 20, 50, 100], //可供选择的每页的行数（*）
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                      //初始化加载第一页，默认第一页
+        //search: true,                       //是否显示表格搜索
+        //showColumns: true,                  //是否显示所有的列
+        //showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数决定表格高度
+        //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+        columns: columns,
+        //detailView: true,                  //是否显示父子表
+        //得到查询的参数，会在url后面拼接，如：?rows=5&page=2&sortOrder=asc&search_kw=&_=1564105760651
+        queryParams: function (params) {
+            //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            var query_params = {
+                page: isNaN((params.offset / params.limit) + 1)?1:(params.offset / params.limit) + 1,   //页码
+                size: isNaN((params.offset / params.limit) + 1)?1:params.limit,    //页面大小
+<!--                lType: $('#toolbar #lType').val(),-->
+<!--                rType: $('#toolbar #rType').val(),-->
+<!--                xType: $('#toolbar #xType').val(),-->
+<!--                aType: $('#toolbar #aType').val(),-->
+<!--                sType: $('#toolbar #sType').val(),-->
+                contractName: $('#toolbar #byteCodes').val(),
+                //查询框中的参数传递给后台
+                //search_kw: $('#search-keyword').val(), // 请求时向服务端传递的参数
+            };
+            return query_params;
+        },
+
+    });
+
+
+
+    $("#table1").bootstrapTable({
+        toolbar: '#toolbar',                //自定义工具按钮
+        url: url,                           //请求后台的URL（*）
+        method: 'get',                      //请求方式（*）
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: false,                   //是否显示分页（*）
+        pageSize: 1,                       //每页的记录行数（*）
+        pageList: [10, 15, 20, 50, 100], //可供选择的每页的行数（*）
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                      //初始化加载第一页，默认第一页
+        //search: true,                       //是否显示表格搜索
+        //showColumns: true,                  //是否显示所有的列
+        //showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数决定表格高度
+        //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+        columns: columns,
+        //detailView: true,                  //是否显示父子表
+        //得到查询的参数，会在url后面拼接，如：?rows=5&page=2&sortOrder=asc&search_kw=&_=1564105760651
+        queryParams: function (params) {
+            //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            var query_params = {
+                page: 1,   //页码
+                size: 1,    //页面大小
+<!--                lType: $('#toolbar #lType').val(),-->
+<!--                rType: $('#toolbar #rType').val(),-->
+<!--                xType: $('#toolbar #xType').val(),-->
+<!--                aType: $('#toolbar #aType').val(),-->
+<!--                sType: $('#toolbar #sType').val(),-->
+                contractName: $('#toolbar #byteCodes').val(),
+                //查询框中的参数传递给后台
+                //search_kw: $('#search-keyword').val(), // 请求时向服务端传递的参数
+            };
+            return query_params;
+        },
+    });
+
+
+    //表格超出宽度鼠标悬停显示td内容
+    function paramsMatter(value,row,index) {
+        var span=document.createElement("span");
+        span.setAttribute("title",value);
+        span.innerHTML = value;
+        return span.outerHTML;
+    }
+    //td宽度以及内容超过宽度隐藏
+    function formatTableUnit(value, row, index) {
+        return {
+            css: {
+                "white-space": "nowrap",
+                "text-overflow": "ellipsis",
+                "overflow": "hidden",
+                "max-width": "150px"
+            }
+        }
+    }
+
+
+    //得到查询的参数
+   //操作栏的格式化
+    function actionFormatter(value, row, index) {
+            var result = "";
+<!--            result += '<a href="javascript:;" class="btn btn btn-info" style="margin:4px" onclick="EditViewById(' + index+')" title="编辑">';-->
+<!--            result += '<span class="glyphicon glyphicon-pencil"></span></a>';-->
+            result += '<a href="javascript:;" class="btn btn btn-danger"  style="margin:4px" onclick="DeleteByIds(' + row.id + ')" title="删除">';
+            result += '<span class="glyphicon glyphicon-remove"></span></a>';
+            return result;
+        }
+   //定义表格操作编辑按钮 title="编辑"
+    function EditViewById(index){
+        //alert(index);
+        // 调出modal 框
+        var row = $("#table").bootstrapTable('getData')[index];
+        $("#modal_id").val(row.id);
+        $("#modal_contractName").val(row.contractName);
+        $("#modal_byteCodes").val(row.byteCodes);
+        $("#modal_lType").val(row.lType);
+        $("#modal_rType").val(row.rType);
+        $("#modal_xType").val(row.xType);
+        $("#modal_aType").val(row.aType);
+        $("#modal_sType").val(row.sType);
+        $("#modal_createTime").val(row.create_time);
+        $("#myModal").modal();
+    }
+     //定义表格操作编辑删除 title="删除"
+    function DeleteByIds(id){
+        //alert(JSON.stringify(ids));
+        //把ids的值给到隐藏输入框
+        $('#del_ids').val(JSON.stringify(id));
+        //调出删除模态框
+        $("#delModal").modal();
+    }
+     //定义转换类别
+    function  typeFormatter(value) {
+		if(value==='0'){
+			return "访问控制"
+		}else if(value==='1'){
+			return "整数溢出"
+		}else if(value==='2'){
+			return "拒绝服务"
+		}else if(value==='3'){
+			return "交易顺序"
+		}else if(value==='4'){
+			return "可重入"
+		}else if(value==='5'){
+			return "时间依赖"
+		}
+		else{
+			return "未检查调用返回值漏洞"
+		}
+	}
+
+    function contract_save(){
+    var $form = $("#model-form"); // The form instance
+
+    $.ajax({
+            type:'post',
+            url:'/Smote/save/',
+            data: $form.serialize(),
+            dataType:'json',
+            beforeSend: function() {
+                console.log("beforeSend")
+                // 设置 disabled 阻止用户继续点击
+                //显示
+                $( "#loadingModal" ).modal( 'show' );
+                 $('#sava-btn').attr('disabled', 'disabled');
+
+                },
+            complete: function () {
+                console.log("complete")
+                // 请求完成移除 disabled 属性
+                $("#sava-btn").removeAttr("disabled");
+            },
+             success: function (result) {
+                //隐藏
+                $( "#loadingModal" ).modal( 'hide' );
+                $("#addModal").modal('hide');
+                console.log(result);//打印服务端返回的数据(调试用)
+                if (result.result == "success") {
+                    console.log("success")
+                    {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                    $('#addModal').modal('hide');
+                    {# 判断确实正确入库之后提示#}
+                    alert('检测成功！')
+                    {#刷新表格数据#}
+                    $("#table").bootstrapTable('refresh');
+                    $("#table1").bootstrapTable('refresh');
+                }  else {
+                alert("添加失败")
+            }
+            },
+             error: function (jqXHR, textStatus, e) {
+                    alert("提交异常："+e);
+                }
+        });
+    }
+//点提交按钮，发请求
+$('#sava-btn').click(function(e) {
+    contract_save();
+ })
+$('#btn_add').click(function(e) {
+    $('#model-form > div:nth-child(3) > div > textarea').val('');
+ })
+
+ $("#sava-edit-btn").click(function(){
+        $.ajax({
+            cache: false,
+            type: "POST", //方法类型
+            dataType: "json",  //预期服务器返回的数据类型
+            url: "/Smote/save", //url
+            data: $("#model-form").serialize(),
+            success: function (data) {
+                console.log(data);//打印服务端返回的数据(调试用)
+                if (data.msg == "success") {
+                    {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                    $('#myModal').modal('hide');
+                    {# 判断确实正确入库之后提示#}
+                    console.log('提交数据成功');
+                    {#刷新表格数据#}
+                    $("#table").bootstrapTable('refresh');
+                    $("#table1").bootstrapTable('refresh');
+                }
+            },
+            error: function () {
+                alert('提交失败');
+            }
+        });
+});
+$("#searchContract").click(function() {
+      $("#table").bootstrapTable('refresh');
+      $("#table1").bootstrapTable('refresh');
+});
+$("#isHide").click(function() {
+
+      if($('#table').is(':hidden')){
+			$("#table").bootstrapTable('refreshOptions', { pagination: true })
+          $("#table").show();
+		}else{
+      		$("#table").hide();
+          $("#table").bootstrapTable('refreshOptions', { pagination: false })
+		}
+});
+
+$("#isHistory").click(function() {
+    if(isHisory===false){//当前数据，转为历史数据
+        isHisory=true
+        $("#table").bootstrapTable('refreshOptions', { pageSize: 10 })
+        $("#table").bootstrapTable('refreshOptions', { pagination: true })
+    }else {//历史数据转为当前数据
+        $("#table").bootstrapTable('refreshOptions', { pageSize: 1 })
+        $("#table").bootstrapTable('refreshOptions', { pagination: false })
+        isHisory=false
+    }
+    console.log($('#table').bootstrapTable('getData')[0]);
+});
+// 点确定按钮发delete请求
+$("#deleteIds").click(function() {
+    var del_ids = $('#del_ids').val();
+    $.ajax({
+        cache: false,
+        url: "/Smote/delete/", //url
+        type: "POST",  //方法类型
+        dataType: "json",  //预期服务器返回的数据类型
+        data: JSON.stringify({ids: del_ids}),
+        success: function (result) {
+            //隐藏模态框
+            $("#delModal").modal('hide');
+            if (result.result == "success"){
+                // 此处可以显示一个toastr消息
+                alert('删除成功！')
+                $("#table").bootstrapTable('refresh');
+                $("#table1").bootstrapTable('refresh');
+            }
+            else {
+                alert("删除失败")
+            }
+        },
+        error: function () {
+                $("#delModal").modal('hide');
+                // 此处可以显示一个toastr消息
+                alert("删除失败,服务器异常")
+            }
+    });
+     $.ajaxSetup({
+          data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+});
+})
+</script>
+{% endblock footer %}
+

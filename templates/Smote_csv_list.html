@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+<!--重写title-->
+{% block title %} 以太坊智能合约漏洞检测系统 {% endblock %}
+<!--区域1保持父模板默认状态-->
+<!--对父模板的区域2进行重写-->
+{% block footer %}
+
+<div class="container1">
+   {% csrf_token %}
+
+<!--    <div id="CSVTable"></div>-->
+
+</div>
+
+<!--<script src="{% static 'jquery.csvToTable.js' %}"></script>-->
+
+<!--<script>-->
+<!--$(function() {-->
+<!--  // $('#CSVTable').CSVToTable("D:\\code\\project\\web\\detectContractModels\\set\\test3000.csv");-->
+<!--  $('#CSVTable').CSVToTable("{% static 'test3000.csv' %}");-->
+<!--});-->
+<!--</script>-->
+
+<!--<style>-->
+
+<!--    table {-->
+<!--		  margin: 0 auto;-->
+<!--		  border-collapse: collapse;-->
+<!--		  border: 1px solid #d4d4d4;-->
+<!--		  height: 500px;-->
+<!--		}-->
+
+<!--		tr:nth-child(even) {-->
+<!--		  background: #d4d4d4;-->
+<!--		}-->
+
+<!--		th, td {-->
+<!--		  padding: 10px 30px;-->
+<!--		}-->
+
+<!--		th {-->
+<!--		  border-bottom: 1px solid #d4d4d4;-->
+<!--		}-->
+<!--        -->
+
+<!--</style>-->
+    {% endblock footer %}

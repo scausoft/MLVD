@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+<!--重写title-->
+{% block title %} 以太坊智能合约漏洞检测系统 {% endblock %}
+<!--区域1保持父模板默认状态-->
+<!--对父模板的区域2进行重写-->
+{% block footer %}
+
+<div class="container1" >
+   {% csrf_token %}
+
+    <div class="row piclist" style="width: 100%; margin: 0 0 30px 0; padding: 6px 20px; border: 1px solid #ddd;">
+            <img decoding="async" src="{% static 'WebStackPage/images/SmoteNN.png' %}"  class="pull-left" width="700px" >
+                    <p>在表IV中，LightGBM分类器的Micro-F1和Macro-F1值最高，均超过99%。
+        <p>1:Callstack漏洞的F1-score为99.18% ；</p>
+        <p>2:可重入漏洞的F1-score为98.28% ；</p>
+        <p>3:整数溢出漏洞的F1-score为99.64% ；</p>
+        <p>4:时间戳漏洞的F1-score为98.39%；</p>
+        <p>5:TOD漏洞的F1-score为99.41%；</p>
+        <p>6:Tx.origin漏洞的F1-score为99.51%。</p>
+    </div>
+    <div class="row piclist" style="width: 100%; margin: 0 0 30px 0; padding: 6px 20px; border: 1px solid #ddd;">
+        <img decoding="async" src="{% static 'WebStackPage/images/SmoteTT.png' %}" width="700px" style="float: right">
+        <p>
+        在表V中，LightGBM分类器的Micro-F1和Macro-F1值均超过97%。 </p>
+            <p>
+            1:Callstack漏洞的F1-score为97.54% ； </p>
+           <p>
+        2:可重入漏洞的F1-score为95.61% ； </p>
+           <p> 3:整数溢出漏洞的F1-score为97.44% ； </p>
+            <p>4:时间戳漏洞的F1-score为95.95%； </p>
+           <p> 5:TOD漏洞的F1-score为98.78%； </p>
+           <p> 6:Tx.origin漏洞的F1-score为98.40%。
+        </p>
+    </div>
+    <div class="row piclist" style="width: 100%; margin: 0; padding: 6px 20px; border: 1px solid #ddd;">
+        <img decoding="async" src="{% static 'WebStackPage/images/Smote.png' %}" width="700px" class="pull-left">
+            <p>在表VI中，LightGBM分类器的Micro-F1和Macro-F1值为96%。</p>
+            <p>1:Callstack漏洞的F1-score为97.07% ；</p>
+            <p>2:可重入漏洞的F1-score为94.82% ；</p>
+            <p>3:整数溢出漏洞的F1-score为97.00% ；</p>
+            <p>4:时间戳漏洞的F1-score为95.22%；</p>
+            <p>5:TOD漏洞的F1-score为98.32%；</p>
+            <p>6:Tx.origin漏洞的F1-score为98.32%。</p>
+    </div>
+
+
+
+
+
+<!--        <img decoding="async" src="{% static 'WebStackPage/images/SmoteNN.png' %}" class="img-thumbnail" width= 700px style="display:block;float:left;margin-left: 30px;margin-top: 10px">-->
+
+<!--        <img decoding="async" src="{% static 'WebStackPage/images/SmoteTT.png' %}" class="img-thumbnail" width= 700px style="display:block;float:left;margin-left: 30px;margin-top: 10px">-->
+
+<!--        <img decoding="async" src="{% static 'WebStackPage/images/Smote.png' %}" class="img-thumbnail" width= 700px style="display:block;float:left;margin-left: 30px;margin-top: 10px">-->
+
+</div>
+    {% endblock footer %}

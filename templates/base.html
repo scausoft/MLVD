@@ -1,0 +1,284 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta  charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>{% block title %}Ethereum Smart Contract Vulnerability Detection System{% endblock title %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="{% static 'WebStackPage/images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/fonts/linecons/css/linecons.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/fonts/fontawesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/xenoncore.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/xenon-components.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/xenon-skins.css' %}">
+    <link rel="stylesheet" href="{% static 'WebStackPage/css/nav.css' %}">
+
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<!--    <link rel="stylesheet" href="{% static 'bootstrap.css' %}"-->
+<!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">-->
+ <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap-theme.min.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+
+
+    <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/jquery-3.3.1/jquery.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+
+    <style type="text/css">
+        /*#CSVTable table {*/
+		/*  margin: 0 auto;*/
+		/*  !*text-align: center;*!*/
+		/*  border-collapse: collapse;*/
+		/*  border: 1px solid #d4d4d4;*/
+		/*  height: 500px;*/
+		/*}*/
+
+        /*#CSVTable tr:nth-child(even) {*/
+		/*  background: #d4d4d4;*/
+		/*}*/
+
+		/*#CSVTable th, td {*/
+		/*  padding: 10px 30px;*/
+		/*}*/
+
+		/*#CSVTable th {*/
+		/*  border-bottom: 1px solid #d4d4d4;*/
+		/*}*/
+
+        .modal {
+            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+         .piclist p{
+            text-indent: 4rem;
+            font-size: 20px;
+            line-height: 24px;
+            color: rgb(44, 46, 47);
+        }
+
+        .loophole p{
+            text-indent: 4rem;
+            font-size: 18px;
+            line-height: 20px;
+            color: rgb(44, 46, 47);
+        }
+    </style>
+</head>
+<body class="page-body">
+<!-- skin-white -->
+<div class="page-container">
+    <div class="sidebar-menu toggle-others fixed">
+        <div class="sidebar-menu-inner">
+            <header class="logo-env">
+                <!-- logo -->
+                <div class="logo">
+                    <img src="{% static 'WebStackPage/images/logo.png' %}" width="100%" alt=""/>
+                </div>
+                <div class="mobile-menu-toggle visible-xs">
+                    <a href="#" data-toggle="user-info-menu">
+                        <i class="linecons-cog"></i>
+                    </a>
+                    <a href="#" data-toggle="mobile-menu">
+                        <i class="fa-bars"></i>
+                    </a>
+                </div>
+            </header>
+            <ul id="main-menu" class="main-menu">
+                <li>
+                    <a href="{% url 'user_list'%} ">
+<!--                        <i class="linecons-heart"></i>-->
+                        <span class="tooltip-blue"><h4>用户管理</h4></span>
+                        <span class="label label-Primary pull-right hidden-collapsed">︎</span>
+                    </a>
+                    <a href="{% url 'Smote_csv_list'%} ">
+<!--                        <i class="linecons-heart"></i>-->
+                        <span class="tooltip-blue"><h4>数据集</h4></span>
+                        <span class="label label-Primary pull-right hidden-collapsed"></span>
+                    </a>
+                    <a href="{% url 'Smote_list'%} ">
+<!--                        <i class="linecons-heart"></i>-->
+                        <span class="tooltip-blue"><h4>漏洞检测</h4></span>
+                        <span class="label label-Primary pull-right hidden-collapsed"></span>
+                    </a>
+
+<!--                    <a href="{% url 'loophole_list'%}">-->
+<!--&lt;!&ndash;                        <i class="linecons-heart"></i>&ndash;&gt;-->
+<!--                        <span class="tooltip-blue"><h4>Vulnerability Introduction</h4></span>-->
+<!--                        <span class="label label-Primary pull-right hidden-collapsed">︎</span>-->
+<!--                    </a>-->
+<
+<!--                      <a href="{% url 'pic_list'%}">-->
+<!--&lt;!&ndash;                        <i class="linecons-heart"></i>&ndash;&gt;-->
+<!--                        <span class="tooltip-blue"><h4>Detection Effect</h4></span>-->
+<!--                        <span class="label label-Primary pull-right hidden-collapsed">︎</span>-->
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+<!--    <div class="row">-->
+<!--        <div class="col-md-8">.col-md-8</div>-->
+<!--        <div class="col-md-4"></div>-->
+<!--    </div>-->
+
+    <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Ethereum Smart Contract Vulnerability Detection System</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+<!--          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'logout'%}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<!--    <div class="col-md-8">-->
+<!--        <nav class="navbar user-info-navbar" role="navigation">-->
+<!--            <ul class="user-info-menu left-links list-inline list-unstyled">-->
+<!--                <li class="hidden-sm hidden-xs">-->
+<!--                    <a data-toggle="sidebar">-->
+<!--                        <i class="fa-bars"></i>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="{% url 'logout'%}">-->
+<!--                        <button type="button" class="btn btn-default">退出登录</button>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </nav>-->
+<!--    </div>-->
+    <!--区域2可以被子模板重写-->
+    {% block content %}
+<!--    <p>这是主体内容可以被子模板重写</p>-->
+    {% endblock content %}
+<!--    <hr>-->
+    <!--区域3可以被子模板重写-->
+    {% block footer %}
+<!--    <p>这是结尾的内容也可以被重写</p>-->
+    {% endblock footer %}
+    <!-- 锚点平滑移动 -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //img lazy loaded
+            const observer = lozad();
+            observer.observe();
+
+            $(document).on('click', '.has-sub', function () {
+                var _this = $(this)
+                if (!$(this).hasClass('expanded')) {
+                    setTimeout(function () {
+                        _this.find('ul').attr("style", "")
+                    }, 300);
+
+                } else {
+                    $('.has-sub ul').each(function (id, ele) {
+                        var _that = $(this)
+                        if (_this.find('ul')[0] != ele) {
+                            setTimeout(function () {
+                                _that.attr("style", "")
+                            }, 300);
+                        }
+                    })
+                }
+            })
+            $('.user-info-menu .hidden-sm').click(function () {
+                if ($('.sidebar-menu').hasClass('collapsed')) {
+                    $('.has-sub.expanded > ul').attr("style", "")
+                } else {
+                    $('.has-sub.expanded > ul').show()
+                }
+            })
+            $("#main-menu li ul li").click(function () {
+                $(this).siblings('li').removeClass('active'); // 删除其他兄弟元素的样式
+                $(this).addClass('active'); // 添加当前元素的样式
+            });
+            $("a.smooth").click(function (ev) {
+                ev.preventDefault();
+
+                public_vars.$mainMenu.add(public_vars.$sidebarProfile).toggleClass('mobile-is-visible');
+                ps_destroy();
+                $("html, body").animate({
+                    scrollTop: $($(this).attr("href")).offset().top - 30
+                }, {
+                    duration: 500,
+                    easing: "swing"
+                });
+            });
+            return false;
+        });
+
+        var href = "";
+        var pos = 0;
+        $("a.smooth").click(function (e) {
+            $("#main-menu li").each(function () {
+                $(this).removeClass("active");
+            });
+            $(this).parent("li").addClass("active");
+            e.preventDefault();
+            href = $(this).attr("href");
+            pos = $(href).position().top - 30;
+        });
+    </script>
+
+    <!-- Bottom Scripts -->
+    <script src="{% static 'WebStackPage/js/TweenMax.min.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/resizeable.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/joinable.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/xenon-api.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/xenon-toggles.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/xenon-custom.js' %}"></script>
+    <script src="{% static 'WebStackPage/js/lozad.js' %}"></script>
+
+
+</div>
+</body>
+@media all and (orientation : portrait) 竖屏
+@media all and (orientation : landscape)横屏
+</html>

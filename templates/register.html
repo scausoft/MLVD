@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>以太坊智能合约漏洞检测系统</title>
+
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css"
+      integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="\static\plugins\bootstrap-3.4.1\css\bootstrap.min.css" > -->
+    <!-- 样式链接 -->
+<!--    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <style type="text/css">
+    html {
+        background-color: #202128;
+    }
+    /*最外面一个div的样式    */
+    .account {
+        width: 550px;
+        border-radius: 8px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 200px;
+        padding: 20px 60px;
+        background-color: #282B34;
+    }
+    /*用户登录标题设置*/
+    .account h2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #1ff;
+    }
+    body {
+        background-color: #202128;
+    }
+    .header-wrapper {
+        height: 8rem;
+        width: 100%;
+        background: #202128;
+    }
+    .header-wrapper .top {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .header-wrapper .top .item1 {
+        flex-grow: 20;
+        display: flex;
+        align-items: center;
+        margin-left: 4%;
+        background: url("{% static 'WebStackPage/images/logo.png' %}") 0% no-repeat;
+        background-size: 14%;
+    }
+    .header-wrapper .top .item {
+        height: 100%;
+    }
+    .header-wrapper .top .item1 .a {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body class="register" >
+<div class="header-wrapper">
+    <div class="top">
+        <div class="item item1">
+            <div class="a"></div>
+        </div>
+    </div>
+</div>
+    <div class="account">
+        <h2>以太坊智能合约漏洞检测系统</h2>
+        <!-- 表单 -->
+        <form method="post" class="form-horizontal">
+            <!-- django默认在post请求加一个csrf_token值，不加{% csrf_token %}会报错 -->
+            {% csrf_token %}
+            <div class="form-group" style="margin-top: 50px">
+                <label class="col-sm-2 control-label" style="color: #1ff">用户名</label>
+                <div class="col-sm-10">
+                    <input type="username" type="text" class="form-control" id="username" name="username" placeholder="用户名">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 30px">
+                <label class="col-sm-2 control-label" style="color: #1ff">密码</label>
+                <div class="col-sm-10">
+                    <input  type="password" type="text"  class="form-control" id="password" name="password" placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 30px">
+                <!-- 错误信息 -->
+              <div class="col-sm-offset-2 col-sm-10" style="color: red;">{{error_msg}}</div>
+              <div class="col-sm-offset-2 col-sm-10">
+<!--                  <button class="btn btn-primary btn-lg" type="submit">注册</button>-->
+                  <button class="btn btn-primary btn-lg" id="registerBtn" type="button">注册</button>
+              </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/jquery-3.3.1/jquery.js"></script>
+
+    <script>
+        $('#registerBtn').click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            $.ajaxSetup({
+                data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+            });
+            $.ajax({
+                type: "POST",
+                url: "/register/",
+                data: {username: username, password: password},
+                success: function(data){
+                    console.log(data.isSuccess)
+                    if(data.isSuccess == "true"){
+                        alert("注册成功，请登录");
+                        window.location.replace("/");
+                    } else {
+                        alert("注册失败");
+                    }
+                }
+            });
+        });
+        // $("#registerBtn").click(function() {
+        //     var username = $("#username").val();
+        //     var password = $("#password").val();
+        //     $.ajax({
+        //         cache: false,
+        //         url: "/register/", //url
+        //         type: "POST",  //方法类型
+        //         dataType: "json",  //预期服务器返回的数据类型
+        //         // data: JSON.stringify({ids: del_ids}),
+        //         success: function (result) {
+        //             //隐藏模态框
+        //             $("#delModal").modal('hide');
+        //             if (result.result == "success"){
+        //                 // 此处可以显示一个toastr消息
+        //                 alert('删除成功！')
+        //                 $("#table").bootstrapTable('refresh');
+        //             }
+        //             else {
+        //                 alert("删除失败")
+        //             }
+        //         },
+        //         error: function () {
+        //             $("#delModal").modal('hide');
+        //             // 此处可以显示一个toastr消息
+        //             alert("删除失败,服务器异常")
+        //         }
+        //     });
+        // });
+    </script>
+
+</body>
+</html>
